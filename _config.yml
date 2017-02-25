@@ -16,7 +16,7 @@ author:  # change following line to your infomation.
   last_name: Liu # Be used at index page about me section.
   cv: # http://cv.jack003.com  # A online CV can be printed as PDF, leave blank if you don't have now
   email: kunliu2012@gmail.com  # Leave blank if you don't have now
-  facebook_username: #jiakunnj  # Leave blank if you don't have now
+  facebook_username: kunliukelvin # Leave blank if you don't have now
   github_username: kunliu-kelvin # Leave blank if you don't have now
   avatar: /static/assets/img/landing/avatar.jpg  # upload your avatar at directory and edit it.
   skill_icon1:
