@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "ROS setup.\*sh 如何改变系统环境变量？"
+title:  "ROS的setup脚本如何改变系统环境变量？"
 date:   2017-02-25
-desc: "如果在命令行中执行'source setup.\*sh'，与ROS相关的系统环境变量的值就可能改变。"
+desc: "如果在命令行中执行setup脚本，与ROS相关的系统环境变量的值就可能改变。"
 keywords: "blog,ROS,shell,script,Linux"
 categories: [ROS]
 tags: [ROS,Linux]
