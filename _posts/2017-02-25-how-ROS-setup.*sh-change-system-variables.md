@@ -8,6 +8,7 @@ categories: [ROS]
 tags: [ROS,Linux]
 icon: icon-html
 ---
+
 已经知道，ROS命令行工具（例如rosrun）需要根据ROS\_PACKAGE\_PATH中指明的路径去各个workspace（工作空间）中搜索软件包，而每个工作空间的路径可以通过source相应的setup.\*sh加入到该环境变量中。看起来只要source所有的工作空间就对了，但是如果颠倒顺序是不行的，会出现写了source某个工作空间但环境变量中没有包含对应的路径。
 
 那是不是要按照工作空间的第一次被catkin\_make的顺序去source呢？有时候可以，有时候也出问题，也不完全对。因为ROS\_PACKAGE\_PATH的值是被替换而不是附加。
