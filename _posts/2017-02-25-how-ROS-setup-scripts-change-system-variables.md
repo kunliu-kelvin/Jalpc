@@ -9,12 +9,191 @@ tags: [ROS,Linux]
 icon: icon-html
 ---
 
-已经知道，ROS命令行工具（例如rosrun）需要根据ROS\_PACKAGE\_PATH中指明的路径去各个workspace（工作空间）中搜索软件包，而每个工作空间的路径可以通过source相应的setup.\*sh加入到该环境变量中。看起来只要source所有的工作空间就对了，但是如果颠倒顺序是不行的，会出现写了source某个工作空间但环境变量中没有包含对应的路径。
+## 测试的环境
 
-那是不是要按照工作空间的第一次被catkin\_make的顺序去source呢？有时候可以，有时候也出问题，也不完全对。因为ROS\_PACKAGE\_PATH的值是被替换而不是附加。
+- ROS版本：indigo
 
-其实，具体顺序根本就不是最关键的。根本上我们需要的只是source包含所有工作空间路径的setup.\*sh就行了。因为每一次catkin\_make某个工作空间都会生成新的setup.\*sh，而其中包含了当前的ROS\_PACKAGE\_PATH中的路径和当前的工作空间的路径。所以原则上，创建新工作空间后，在多个工作空间来回切换并catkin\_make，最后所有工作空间生成的setup.\*sh都是可以交替包括所有的工作空间路径的，但顺序略不同，这应该是这种机制的设计目的。
+- 操作系统：Ubuntu 1404 32bit/64bit
 
-如果在\*shrc文件中写所有source工作空间的命令，ROS\_PACKAGE\_PATH中包的重叠结果由最后一条决定。所以最后一条最好是source最后catkin\_make的工作空间的setup.\*sh脚本。
+## 准备知识
 
-工作空间之间最好不要有依赖关系。如果工作空间之间需要用ROS\_PACKAGE\_PATH指示依赖关系的话，千万不要在\*shrc文件中使用source指令，因为它会为新打开的终端设置固定的ROS\_PACKAGE\_PATH。应该使用在一个终端中使用source和catk\_make指令为一个工作空间管理自己的ROS\_PACKAGE\_PATH，防止同名包冲突，在其他终端中使用该空间时也source该空间自己的setup.\*sh。这种时候情况会变得复杂，需要具体分析。
+完整地学习过[ROS beginner level](http://wiki.ros.org/ROS/Tutorials#Beginner_Level)。
+
+## 问题
+
+我们已经知道，某些ROS命令行工具（例如rosrun）需要根据这个环境变量，ROS\_CKAGE\_PATH，指明的路径去搜索某些ROS软件包。同时，我们也知道可以通过source某个ROS工作空间（workspace）相应的setup.\*sh使该工作空间的src文件夹路径在该环境变量中。
+
+但是，一个setup.\*sh做了哪些事，又是如何完成自己的工作的呢？
+
+
+
+## 探究
+
+一个工作空间中的所有setup文件（setup.\*sh）最后都指向setup.sh。在setup.sh中，有这样的一段话：
+
+```
+
+
+#!/usr/bin/env sh
+
+# generated from catkin/cmake/template/setup.sh.in
+
+
+
+# Sets various environment variables and sources additional environment hooks.
+
+# It tries it's best to undo changes from a previously sourced setup file before.
+
+# Supported command line options:
+
+# --extend: skips the undoing of changes from a previously sourced setup file
+
+
+
+# since this file is sourced either use the provided _CATKIN_SETUP_DIR
+
+# or fall back to the destination set at configure time
+
+```
+
+翻译过来就是：
+
+```
+
+......
+
+设置很多环境变量和sources某些额外的环境钩子。
+
+它尽自己最大的能力来撤销先前被source的setup文件的影响。
+
+一命令行选项被支持：
+
+--extended：跳过对来自先前被source的setup文件的修改的撤销。
+
+......
+
+```
+
+在除'--extend'选项外的默认情况下，一个setup.\*sh会尽可能撤销先前其他所有setup.\*sh的影响，然后它再自己施加影响。
+
+## 应用
+
+### 单工作空间（workspace）
+
+如果我们只创建一个工作空间A且只在它里面工作。为了向一些ROS有关的环境变量中加入该工作空间有关的值，我们可以
+
+#### “不省事”的做法
+
+在每次打开一个shell（Linux中的命令行）时都source对应的setup文件。bash shell对应`A/devel/setup.bash`，zsh shell对应`A/devel/setup.zsh`。如下：
+
+```
+
+source A/devel/setup.*sh
+
+```
+
+#### “省事”的做法
+
+ 为了省事，我们也可以把这句命令写入到该shell相应的rc文件（bash shell对应的.bashrc或者zsh shell对应的.zshrc）中的适当位置处（至少应该放在`source /opt/ros/indigo/setup.*sh`后）。
+
+
+
+这两种做法都没问题，只是第一种稍微麻烦。
+
+### 多工作空间 （workspace）
+
+在`/opt/ros/indigo/`外，如果我们创建了多个工作空间且平常在多个工作空间中来回地工作，那么情况会是怎么样？比如我有两工作空间：
+
+1. /home/kun/catkin_ws
+
+2. /home/kun/catkin_test
+
+
+
+怎样做才能满足我们的需求呢？想这个问题时，不免想到情况是什么？我们的目的或者需求是什么？情况是ROS\_PACKAGE\_PATH变量中的**多个目录是有先后顺序的**。目的是我们的**目的各不相同**。所以我把做法按照目的分成两大类。
+
+#### “不省事”的做法
+
+每次打开一个shell时，按照我们要去编写、编译或运行的软件包的依赖关系，依次source相应的工作空间的setup文件。比如：工作空间2中的软件包A依赖工作空间1中的一些软件包。那么可以执行：
+
+```
+
+source /home/kun/catkin_ws/devel/setup.*sh --extended
+
+source /home/kun/catkin_test/devel/setup.*sh --extended
+
+```
+
+如果当前包没有依赖所有其他工作空间的某些包，则只需在该shell中source当前工作空间的那个setup文件。
+
+```
+
+source /home/kun/catkin_test/devel/setup.*sh
+
+```
+
+#### “省事”的做法
+
+##### 情况1
+
+如果工作空间1中所有软件包和工作空间2中的所有软件包之间没有任何依赖关系，那么，将下面两句话放在该shell相应的那rc文件中合适的位置（至少应该放在`source /opt/ros/indigo/setup.*sh`后）。
+
+
+```
+
+source /home/kun/catkin_ws/devel/setup.*sh --extended
+
+source /home/kun/catkin_test/devel/setup.*sh --extended
+
+```
+
+因此，变量ROS\_PACKAGE\_PATH形成一个顺序值
+
+```
+
+ROS_PACKAGE_PATH=/home/kun/catkin_test/src:/home/kun/catkin_ws/src:/opt/ros/indigo/share:/opt/ros/indigo/stacks
+
+```
+
+**但注意：**此时，如果/home/kun/catkin_ws/和opt/ros/indigo/share/中有一对同名软件包，/home/kun/catkin_ws/中的会遮蔽opt/ros/indigo/share/的。
+
+比如，我在opt/ros/indigo/share/中安装了image_proc包，又在/home/kun/catkin_ws/中通过下载源代码的方式安装了这个包。而我在编译某项目时想使用opt/ros/indigo/share/中的这个包，但是由于ROS_PACKAGE_PATH环境变量中多个目录的固定的顺序，我却会使用到/home/kun/catkin_ws/中的那个包。以rospack命令演示一下，对于该包，总有且只有一个路径会被先找到。
+
+```
+
+➜  ~ rospack find image_proc
+
+/home/kun/catkin_ws/src/image_pipeline/image_proc
+
+```
+
+##### 情况2
+
+如果只有工作空间2中某些软件包依赖工作空间1中的某些软件包，那么，将下面两句话放在该shell相应的那rc文件中合适的位置（至少应该放在`source /opt/ros/indigo/setup.*sh`后）。
+
+```
+
+source /home/kun/catkin_ws/devel/setup.*sh --extended
+
+source /home/kun/catkin_test/devel/setup.*sh --extended
+
+```
+
+
+或者，如果只有工作空间1中某些软件包依赖工作空间2中的某些软件包。那么，将下面两句话放在该shell相应的那rc文件中合适的位置（至少应该放在`source /opt/ros/indigo/setup.*sh`后）。
+
+```
+
+source /home/kun/catkin_test/devel/setup.*sh --extended
+
+source /home/kun/catkin_ws/devel/setup.*sh --extended
+
+```
+
+##### 情况3
+
+如果工作空间1中某些软件包与工作空间2中的某些软件包相互依赖，这是最复杂的交叉依赖情况。
+
+请**尽量不要这么做**，因为这是在给自己找麻烦。
+
+如果你不得不这样做，那么请不要像前面那些“省事”的方法那样修改某rc文件。**请直接使用前面的“不省事”的做法**，因为那就是最省事的方法。
