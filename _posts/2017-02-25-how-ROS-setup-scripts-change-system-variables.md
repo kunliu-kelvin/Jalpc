@@ -9,7 +9,9 @@ tags: [ROS,Linux]
 icon: icon-html
 ---
 
-[TOC]
+* TOC
+{:toc}
+
 ## 测试的环境
 
 - ROS版本：indigo
