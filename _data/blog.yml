@@ -5,7 +5,7 @@
 # edit following lines to custom your blog page, make sure name is the same as href but capitalized first letter(except HTML)
 
 - name: Machine_learning
-  href: /machine_learing/
+  href: /machine_learning/
   #- name: HTML
   #  href: /html/
 
