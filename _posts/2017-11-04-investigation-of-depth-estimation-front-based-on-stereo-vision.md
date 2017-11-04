@@ -4,7 +4,7 @@ title:  "基于立体视觉的深度估计的前沿调研"
 date:   2017-11-04
 desc: "基于立体视觉的深度恢复是个很重要的问题，近年来，深度学习为这个问题带来了新的解决思路。"
 keywords: "Machine Learing,Depth Recovery"
-categories: [Robot_vision]
+categories: [Machine_learning]
 tags: [Depth Recovery, Machine Learning, Robot Vision]
 icon: icon-html
 ---
@@ -28,6 +28,6 @@ icon: icon-html
 
 ## 基于深度学习的离差图（Disparity）估计的思路创新
 Alex Kendall 是剑桥大学的研究院，研究i计算机视觉和机器人学。他提出了利用基本几何的深度学习框架 GC-Net 来估计离差图。
-> We proposed the architecture GC-Net which instead looks at the problem’s fundamental geometry. see Have We Forgotten about Geometry in Computer Vision? - Home
+> We proposed the architecture GC-Net which instead looks at the problem’s fundamental geometry. see [Have We Forgotten about Geometry in Computer Vision? - Home](http://alexgkendall.com/computer_vision/have_we_forgotten_about_geometry_in_computer_vision/)
 
-此刻，GC-Net 在 Stereo Evaluation 2012 中排名第二，在 Stereo Evaluation 2012 中排名第四。
+此刻，GC-Net 在 Stereo Evaluation 2012 中排名第二，在 Stereo Evaluation 2015 中排名第四。
