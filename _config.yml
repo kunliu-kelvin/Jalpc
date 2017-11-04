@@ -2,18 +2,18 @@
 
 # Website settings
 title: Kun's Experience
-description: Kun's blog, use Jekyll and github pages.
-keywords: Kun,Jalpc,blog,Jekyll,github,gh-pages
-baseurl: /pweb # if you have suburl as homepage like '/homepage', please change it to '/homepage' and your repo's name should be 'homepage'
-url: http://kunliu-kelvin.github.io/pweb # url should be changed to 'http://www.jack003.com/homepage' as before
+description: Kun's personal website, use Jekyll and github pages.
+keywords: Kun,Jalpc,blog,Jekyll,github pages
+baseurl:  # if you have suburl as homepage like '/homepage', please change it to '/homepage' and your repo's name should be 'homepage'
+url: http://kunliu-kelvin.github.io # url should be changed to 'http://www.jack003.com/homepage' as before
 # url: http://127.0.0.1:4000
-img_path: /pweb/static/assets/img/blog  # url should be changed to '/homepage/static/assets/img/blog' as before
+img_path: /static/assets/img/blog  # url should be changed to '/homepage/static/assets/img/blog' as before
 
 # author -- index page "about me" section
 author:  # change following line to your infomation.
-  name: Kun Liu # Be used at blog posts' author.
-  first_name: Kun # Be used at index page about me section.
-  last_name: Liu # Be used at index page about me section.
+  name: 刘坤（Kun Kelvin Liu） # Be used at blog posts' author.
+  first_name: 坤（Kun） # Be used at index page about me section.
+  last_name: 刘（Liu） # Be used at index page about me section.
   cv: # http://cv.jack003.com  # A online CV can be printed as PDF, leave blank if you don't have now
   email: kunliu2012@gmail.com  # Leave blank if you don't have now
   facebook_username: kunliukelvin # Leave blank if you don't have now
