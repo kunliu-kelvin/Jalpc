@@ -24,7 +24,7 @@ icon: icon-html
 
 ## 问题
 
-我们已经知道，某些ROS命令行工具（例如rosrun）需要根据这个环境变量，ROS\_CKAGE\_PATH，指明的路径去搜索某些ROS软件包。同时，我们也知道可以通过source某个ROS工作空间（workspace）相应的setup.\*sh使该工作空间的src文件夹路径在该环境变量中。
+我们已经知道，某些ROS命令行工具（例如rosrun）需要根据这个环境变量，ROS\_PACKAGE\_PATH，指明的路径去搜索某些ROS软件包。同时，我们也知道可以通过source某个ROS工作空间（workspace）相应的setup.\*sh使该工作空间的src文件夹路径在该环境变量中。
 
 但是，一个setup.\*sh做了哪些事，又是如何完成自己的工作的呢？
 
