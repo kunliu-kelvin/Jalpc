@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  照相机的传统标定的经验之谈：前提、步骤、注意"
+title:  照相机的传统标定的经验之谈：前提、步骤、注意
 date:   2018-01-09
 desc: "五年以来，我断断续续标定过网络摄像头、机器人的相机、工业相机、双目深度相机、RGBD深度相机。这是我的一些经验总结，希望对你有用。"
 keywords: "Aperture, 光圈, Focus, 焦点, Depth of Feild, 景深, Camera Calibration, 相机标定, Practice Experience, 实践经验"
